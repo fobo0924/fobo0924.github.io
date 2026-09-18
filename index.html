@@ -1,0 +1,1356 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="方一民 Yimin Fang — 个人学术主页。">
+  <meta name="theme-color" content="#08090c">
+  <title>方一民 · Yimin Fang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #08090c;
+      --ink: #f2f3f5;
+      --muted: #94959c;
+      --faint: #5d5e66;
+      --line: rgba(255, 255, 255, 0.09);
+      --accent: #6b93ff;
+      --sans: "Space Grotesk", ui-sans-serif, system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --serif: "Noto Serif SC", "Songti SC", "SimSun", serif;
+      --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+      --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--accent); color: #06070a; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #23242b; border-radius: 3px; }
+
+    /* ---------- background ---------- */
+
+    .bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg .glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 42% at 72% -8%, rgba(107, 147, 255, 0.13), transparent 70%),
+        radial-gradient(ellipse 40% 32% at 8% 108%, rgba(107, 147, 255, 0.05), transparent 70%);
+      transform: translate3d(calc(var(--gx, 0) * 1px), calc(var(--gy, 0) * 1px), 0);
+      will-change: transform;
+    }
+
+    .bg .noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    #net {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      mask-image: linear-gradient(180deg, black 55%, transparent 98%);
+      -webkit-mask-image: linear-gradient(180deg, black 55%, transparent 98%);
+    }
+
+    /* ---------- reveal ---------- */
+
+    .rv {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s ease var(--d, 0s), transform 0.6s var(--ease) var(--d, 0s);
+    }
+
+    .rv.in { opacity: 1; transform: none; }
+
+    /* ---------- nav ---------- */
+
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 50;
+      border-bottom: 1px solid transparent;
+      transition: background-color 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+    }
+
+    .nav.sc {
+      background: rgba(8, 9, 12, 0.72);
+      border-bottom-color: var(--line);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .nav-in {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .brand b {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+    }
+
+    .brand span {
+      font-family: var(--serif);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .nav-right a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+
+    .nav-right a:hover { color: var(--ink); }
+
+    .nav-right .sep { color: var(--faint); }
+
+    /* ---------- hero ---------- */
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 96vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      align-items: center;
+      column-gap: 56px;
+      padding: 120px 0 80px;
+    }
+
+    .hero-text { min-width: 0; }
+
+    .cross {
+      position: absolute;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--faint);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .cross.tl { top: 96px; left: -4px; }
+    .cross.tr { top: 96px; right: -4px; }
+    .cross.bl { bottom: 32px; left: -4px; }
+    .cross.br { bottom: 32px; right: -4px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 34px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 7vw, 5.6rem);
+      font-weight: 600;
+      line-height: 1.06;
+      padding-bottom: 0.1em;
+      letter-spacing: -0.045em;
+      background: linear-gradient(180deg, #ffffff 25%, #a8b0c6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .cn-name {
+      margin: 26px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-family: var(--serif);
+      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+      font-weight: 600;
+      letter-spacing: 0.5em;
+      color: var(--muted);
+    }
+
+    .cn-name::before {
+      content: "";
+      width: 44px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.6;
+    }
+
+    .summary {
+      margin: 40px 0 0;
+      max-width: 36rem;
+      font-size: 16.5px;
+      font-weight: 400;
+      line-height: 1.95;
+      color: var(--muted);
+    }
+
+    .summary b {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .summary .cn {
+      display: block;
+      margin-top: 10px;
+      font-size: 14.5px;
+      color: var(--faint);
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-top: 48px;
+    }
+
+    .links a {
+      position: relative;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      text-decoration: none;
+      padding-bottom: 5px;
+    }
+
+    .links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--faint);
+      transition: background 0.3s ease;
+    }
+
+    .links a::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.45s var(--ease);
+      z-index: 1;
+    }
+
+    .links a:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .links a .arrow {
+      display: inline-block;
+      color: var(--accent);
+      transition: transform 0.3s var(--ease);
+    }
+
+    .links a:hover .arrow { transform: translate(2px, -2px); }
+
+    .hero-meta {
+      position: absolute;
+      bottom: 32px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--faint);
+    }
+
+    /* rotating circular-text badge */
+
+    .badge {
+      position: relative;
+      justify-self: center;
+      width: 320px;
+      height: 320px;
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+      cursor: pointer;
+      border-radius: 50%;
+      touch-action: none;
+    }
+
+    .badge:focus-visible {
+      outline: 1px solid var(--accent);
+      outline-offset: 6px;
+    }
+
+    .badge svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      will-change: transform;
+    }
+
+    .badge text {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.16em;
+      fill: var(--muted);
+      transition: fill 0.3s ease;
+    }
+
+    .badge .core {
+      display: grid;
+      place-items: center;
+      width: 180px;
+      height: 180px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      transition: border-color 0.3s ease;
+    }
+
+    .badge .core canvas {
+      display: block;
+      transition: opacity 0.18s ease;
+    }
+
+    .badge:hover text { fill: var(--ink); }
+
+    .badge:hover .core { border-color: rgba(107, 147, 255, 0.5); }
+
+    /* ---------- custom cursor ---------- */
+
+    #cursor-dot {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 90;
+      pointer-events: none;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f2f3f5;
+      mix-blend-mode: difference;
+      opacity: 0;
+      will-change: transform;
+    }
+
+    #cursor-tag {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 90;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    #cursor-tag .tag-in {
+      display: block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #f2f3f5;
+      color: #08090c;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      user-select: none;
+      opacity: 0;
+      transform: scale(0.5);
+      transform-origin: left center;
+      transition: opacity 0.22s ease, transform 0.35s var(--ease);
+    }
+
+    #cursor-tag.show .tag-in {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    body.has-cursor, body.has-cursor a, body.has-cursor button,
+    body.has-cursor [role="button"] {
+      cursor: none;
+    }
+
+    @media (pointer: coarse) {
+      #cursor-dot, #cursor-tag { display: none; }
+    }
+
+    /* ---------- section ---------- */
+
+    section.block {
+      padding: 96px 0 120px;
+    }
+
+    .sec-head {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+
+    .sec-head .no {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+    }
+
+    .sec-head h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+    }
+
+    .sec-head .en {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+
+    .sec-head .line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+      align-self: center;
+    }
+
+    /* ---------- info rows ---------- */
+
+    .rows { border-bottom: 1px solid var(--line); }
+
+    .row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 220px 1fr 32px;
+      align-items: baseline;
+      gap: 24px;
+      padding: 30px 12px;
+      margin: 0 -12px;
+      border-top: 1px solid var(--line);
+      text-decoration: none;
+      color: inherit;
+      transition: background-color 0.35s ease;
+    }
+
+    .row:hover { background: rgba(255, 255, 255, 0.02); }
+
+    .row .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--faint);
+      transition: color 0.35s ease;
+    }
+
+    .row .label .cn {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--sans);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--faint);
+      text-transform: none;
+    }
+
+    .row .value {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--ink);
+      transition: transform 0.35s var(--ease);
+    }
+
+    .row .value .sub {
+      display: block;
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .row .arr {
+      justify-self: end;
+      font-size: 15px;
+      color: var(--faint);
+      opacity: 0;
+      transform: translate(-4px, 4px);
+      transition: opacity 0.3s ease, transform 0.3s var(--ease), color 0.3s ease;
+    }
+
+    .row:hover .label { color: var(--accent); }
+    .row:hover .value { transform: translateX(6px); }
+    .row:hover .arr { opacity: 1; transform: translate(0, 0); color: var(--accent); }
+
+    /* ---------- footer ---------- */
+
+    footer {
+      position: relative;
+      z-index: 1;
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .foot-in {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 28px 0 36px;
+      border-top: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: 0.1em;
+      color: var(--faint);
+    }
+
+    .foot-in a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+
+    .foot-in a:hover { color: var(--ink); }
+
+    /* ---------- responsive ---------- */
+
+    @media (max-width: 720px) {
+      .nav-in { padding: 14px 20px; }
+      .nav-right .mail { display: none; }
+      main, footer { padding-left: 20px; padding-right: 20px; }
+      .hero {
+        grid-template-columns: 1fr;
+        column-gap: 0;
+        padding-top: 104px;
+        min-height: 0;
+      }
+      .badge { width: 230px; height: 230px; margin: 56px auto 8px; }
+      .badge .core { width: 130px; height: 130px; }
+      .cross { display: none; }
+      .row { grid-template-columns: 1fr; gap: 12px; padding: 26px 8px; margin: 0 -8px; }
+      .row .arr { display: none; }
+      .hero-meta { position: static; margin-top: 64px; }
+      section.block { padding: 72px 0 88px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .rv { opacity: 1; transform: none; transition: none; }
+      .bg .glow { transform: none; }
+      .row, .row .value, .row .label, .row .arr, .links a::before, .links a .arrow { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg" aria-hidden="true">
+    <div class="glow" id="glow"></div>
+    <canvas id="net"></canvas>
+    <div class="noise"></div>
+  </div>
+
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <div id="cursor-tag" aria-hidden="true"><span class="tag-in"></span></div>
+
+  <header class="nav" id="nav">
+    <div class="nav-in">
+      <a class="brand" href="#top" data-cursor-text="TOP"><b>YIMIN FANG</b><span>方一民</span></a>
+      <nav class="nav-right">
+        <a class="mail" href="mailto:you@example.com" data-cursor-text="EMAIL">you@example.com</a>
+        <span class="sep" aria-hidden="true">/</span>
+        <a href="https://github.com/yourname" target="_blank" rel="noreferrer" data-cursor-text="GITHUB">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <span class="cross tl" aria-hidden="true">+</span>
+      <span class="cross tr" aria-hidden="true">+</span>
+
+      <div class="hero-text">
+        <p class="eyebrow rv">Academic Homepage · 学术主页</p>
+        <h1 class="rv" style="--d: 0.06s">Yimin Fang</h1>
+        <p class="cn-name rv" style="--d: 0.12s">方一民</p>
+        <p class="summary rv" style="--d: 0.18s">
+          Student at <b>Beijing University of Posts and Telecommunications</b>, working on
+          deep reinforcement learning for vehicle routing problems (DRL-VRP).
+          <span class="cn">北京邮电大学在读，研究方向为深度强化学习求解车辆路径问题。</span>
+        </p>
+        <div class="links rv" style="--d: 0.24s">
+          <a href="mailto:you@example.com" data-cursor-text="EMAIL">Email <span class="arrow">↗</span></a>
+          <a href="https://github.com/yourname" target="_blank" rel="noreferrer" data-cursor-text="GITHUB">GitHub <span class="arrow">↗</span></a>
+        </div>
+      </div>
+
+      <div class="badge rv" style="--d: 0.36s" id="badge" role="button" data-cursor-text="DRAW" tabindex="0" aria-label="互动求解演示：单击圆内任意位置作为起点刷新一题，依次单击连接所有配送点，最后点回起点闭合，随后与最优路径对比">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            <path id="badge-circle" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"></path>
+          </defs>
+          <text textLength="288" lengthAdjust="spacingAndGlyphs">
+            <textPath href="#badge-circle">DEEP REINFORCEMENT LEARNING · VRP · BUPT ·</textPath>
+          </text>
+        </svg>
+        <span class="core"><canvas id="vrp"></canvas></span>
+      </div>
+
+      <div class="hero-meta rv" style="--d: 0.3s">
+        <span>Beijing, China</span>
+        <span>BUPT · DRL-VRP</span>
+      </div>
+      <span class="cross bl" aria-hidden="true">+</span>
+      <span class="cross br" aria-hidden="true">+</span>
+    </section>
+
+    <section class="block" id="profile">
+      <div class="sec-head rv">
+        <span class="no">01</span>
+        <h2>信息</h2>
+        <span class="en">Profile</span>
+        <span class="line" aria-hidden="true"></span>
+      </div>
+
+      <div class="rows">
+        <div class="row rv">
+          <span class="label">Affiliation<span class="cn">所属单位</span></span>
+          <span class="value">
+            北京邮电大学
+            <span class="sub">Beijing University of Posts and Telecommunications</span>
+          </span>
+          <span class="arr" aria-hidden="true">↗</span>
+        </div>
+
+        <div class="row rv" style="--d: 0.05s">
+          <span class="label">Research<span class="cn">研究方向</span></span>
+          <span class="value">
+            深度强化学习 · 车辆路径问题
+            <span class="sub">Deep Reinforcement Learning for Vehicle Routing Problems (DRL-VRP)</span>
+          </span>
+          <span class="arr" aria-hidden="true">↗</span>
+        </div>
+
+        <a class="row rv" style="--d: 0.1s" href="mailto:you@example.com">
+          <span class="label">Email<span class="cn">邮箱</span></span>
+          <span class="value">
+            you@example.com
+            <span class="sub">欢迎学术交流与合作</span>
+          </span>
+          <span class="arr" aria-hidden="true">↗</span>
+        </a>
+
+        <div class="row rv" style="--d: 0.15s">
+          <span class="label">Status<span class="cn">状态</span></span>
+          <span class="value">
+            在读学生
+            <span class="sub">Student · Beijing, China</span>
+          </span>
+          <span class="arr" aria-hidden="true">↗</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="foot-in rv">
+      <span>© 2026 方一民 · Yimin Fang</span>
+      <a href="https://github.com/yourname" target="_blank" rel="noreferrer" data-cursor-text="GITHUB">github.com/yourname ↗</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var finePointer = window.matchMedia("(pointer: fine)").matches;
+
+      /* reveal on view */
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            en.target.classList.add("in");
+            io.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      document.querySelectorAll(".rv").forEach(function (el) { io.observe(el); });
+
+      /* nav state */
+      var nav = document.getElementById("nav");
+      var onScroll = function () {
+        nav.classList.toggle("sc", window.scrollY > 24);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      /* ————— shared state ————— */
+      var glow = document.getElementById("glow");
+      var gx = 0, gy = 0, gtx = 0, gty = 0;
+      var mouseX = -9999, mouseY = -9999;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      if (finePointer) {
+        window.addEventListener("pointermove", function (e) {
+          mouseX = e.clientX; mouseY = e.clientY;
+          gtx = (e.clientX / window.innerWidth - 0.5) * 36;
+          gty = (e.clientY / window.innerHeight - 0.5) * 24;
+        }, { passive: true });
+      }
+
+      /* ————— background node network (scrolls with the page) ————— */
+      var net = document.getElementById("net");
+      var nctx = net.getContext("2d");
+      var W = 0, H = 0, viewH = 0, pts = [];
+
+      function netResize() {
+        W = window.innerWidth;
+        viewH = window.innerHeight;
+        H = Math.max(viewH, document.documentElement.scrollHeight);
+        net.width = W * dpr;
+        net.height = viewH * dpr;
+        nctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var target = Math.max(60, Math.min(180, Math.round(W * H / 24000)));
+        while (pts.length < target) {
+          pts.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            vx: (Math.random() - 0.5) * 0.22,
+            vy: (Math.random() - 0.5) * 0.22
+          });
+        }
+        pts.length = target;
+      }
+
+      netResize();
+      window.addEventListener("resize", netResize);
+
+      function netDraw() {
+        var sy = window.scrollY;
+        nctx.clearRect(0, 0, W, viewH);
+        var i, j, a, b, ay, by, dx, dy, d2, al;
+        var vis = [];
+        for (i = 0; i < pts.length; i++) {
+          a = pts[i];
+          if (!reduced) {
+            a.x += a.vx; a.y += a.vy;
+            if (a.x < -20) a.x = W + 20; else if (a.x > W + 20) a.x = -20;
+            if (a.y < -20) a.y = H + 20; else if (a.y > H + 20) a.y = -20;
+            if (finePointer) {
+              dx = mouseX - a.x; dy = mouseY + sy - a.y; d2 = dx * dx + dy * dy;
+              if (d2 < 25600 && d2 > 0.01) {
+                d2 = Math.sqrt(d2);
+                a.x += dx / d2 * 0.12;
+                a.y += dy / d2 * 0.12;
+              }
+            }
+          }
+          ay = a.y - sy;
+          if (ay > -40 && ay < viewH + 40 && !inBadge(a.x, ay)) vis.push({ x: a.x, y: ay });
+        }
+        nctx.lineWidth = 1;
+        for (i = 0; i < vis.length; i++) {
+          a = vis[i];
+          for (j = i + 1; j < vis.length; j++) {
+            b = vis[j];
+            dx = a.x - b.x; dy = a.y - b.y; d2 = dx * dx + dy * dy;
+            if (d2 < 16900 && !segInBadge(a.x, a.y, b.x, b.y)) {
+              al = (1 - Math.sqrt(d2) / 130) * 0.14;
+              nctx.strokeStyle = "rgba(107,147,255," + al.toFixed(3) + ")";
+              nctx.beginPath(); nctx.moveTo(a.x, a.y); nctx.lineTo(b.x, b.y); nctx.stroke();
+            }
+          }
+          if (finePointer) {
+            dx = mouseX - a.x; dy = mouseY - a.y; d2 = dx * dx + dy * dy;
+            if (d2 < 28900 && !segInBadge(a.x, a.y, mouseX, mouseY)) {
+              al = (1 - Math.sqrt(d2) / 170) * 0.24;
+              nctx.strokeStyle = "rgba(107,147,255," + al.toFixed(3) + ")";
+              nctx.beginPath(); nctx.moveTo(a.x, a.y); nctx.lineTo(mouseX, mouseY); nctx.stroke();
+            }
+          }
+          nctx.fillStyle = "rgba(242,243,245,0.38)";
+          nctx.fillRect(a.x - 0.75, a.y - 0.75, 1.5, 1.5);
+        }
+      }
+
+      /* ————— VRP badge widget ————— */
+      var vrpEl = document.getElementById("vrp");
+      var vctx = vrpEl.getContext("2d");
+      var VS = 164;
+      vrpEl.width = VS * dpr; vrpEl.height = VS * dpr;
+      vrpEl.style.width = VS + "px"; vrpEl.style.height = VS + "px";
+      vctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      var N = 8;
+      var wps = [];                      /* current point set; index 0 = depot/anchor */
+      var distM = [];
+      var optOrder = [], optLen = 0;
+      var mode = "auto";                 /* auto | user | closed | result */
+      var anchored = false;              /* wps[0] is a visitor-placed anchor */
+      var userPath = [];
+      var userOptimal = false;
+      var pointerPos = null;
+      var closeT = 0;
+      var correctEdges = [], wrongEdges = [], missingEdges = [];
+
+      /* auto pacing */
+      var segs = [], phase = "draw", pt = 0, drawTotal = 1;
+      var HOLD_MS = 5400, FADE_MS = 600;
+      /* result correction pacing */
+      var resT = 0, RES_FADE = 700, RES_DRAW = 2600, RES_HOLD = 2500, RES_OUT = 500;
+
+      function computeOptimal() {
+        var M = wps.length, i, k;
+        distM = [];
+        for (i = 0; i < M; i++) {
+          distM.push([]);
+          for (k = 0; k < M; k++) distM[i][k] = Math.hypot(wps[i].x - wps[k].x, wps[i].y - wps[k].y);
+        }
+        /* exact optimum: fix point 0 (depot/anchor), permute the rest */
+        optLen = Infinity; optOrder = [];
+        var perm = [];
+        for (i = 1; i < M; i++) perm.push(i);
+        (function permute(a, l) {
+          if (l === a.length) {
+            var len = distM[0][a[0]];
+            for (var q = 0; q < a.length - 1; q++) len += distM[a[q]][a[q + 1]];
+            len += distM[a[a.length - 1]][0];
+            if (len < optLen) { optLen = len; optOrder = a.slice(); }
+            return;
+          }
+          for (var q = l; q < a.length; q++) {
+            var tp = a[l]; a[l] = a[q]; a[q] = tp;
+            permute(a, l + 1);
+            tp = a[l]; a[l] = a[q]; a[q] = tp;
+          }
+        })(perm, 0);
+        optOrder.unshift(0);
+      }
+
+      function newProblem(avoid) {
+        var cx = VS / 2, cy = VS / 2;
+        var R = VS / 2 - 14;          /* stay clear of the ring border */
+        var MIN_D = VS * 0.16;        /* minimum separation between points */
+        wps = []; anchored = false;
+        var i, k;
+        for (i = 0; i < N; i++) {
+          var best = null, bestMd = -1;
+          for (var t = 0; t < 90; t++) {
+            var ang = Math.random() * Math.PI * 2;
+            var r = R * (0.3 + 0.7 * Math.sqrt(Math.random()));
+            var cand = { x: cx + Math.cos(ang) * r, y: cy + Math.sin(ang) * r };
+            var md = Infinity;
+            for (k = 0; k < wps.length; k++) {
+              var dd = Math.hypot(wps[k].x - cand.x, wps[k].y - cand.y);
+              if (dd < md) md = dd;
+            }
+            if (avoid) {
+              var da = Math.hypot(avoid.x - cand.x, avoid.y - cand.y);
+              if (da < md) md = da;
+            }
+            if (md >= MIN_D) { best = cand; break; }
+            if (md > bestMd) { bestMd = md; best = cand; }
+          }
+          wps.push(best);
+        }
+        /* depot = node nearest center, at index 0 */
+        var bi = 0, bd = Infinity;
+        for (i = 0; i < N; i++) {
+          var dd2 = (wps[i].x - cx) * (wps[i].x - cx) + (wps[i].y - cy) * (wps[i].y - cy);
+          if (dd2 < bd) { bd = dd2; bi = i; }
+        }
+        var tmp = wps[0]; wps[0] = wps[bi]; wps[bi] = tmp;
+
+        computeOptimal();
+
+        /* auto-mode pacing: length-weighted jitter + pause between legs */
+        segs = [];
+        var M = wps.length, sum = 0;
+        for (i = 0; i < M; i++) {
+          var jit = 0.55 + Math.random() * 0.9;
+          var dur = distM[optOrder[i]][optOrder[(i + 1) % M]] * jit;
+          segs.push({ a: wps[optOrder[i]], b: wps[optOrder[(i + 1) % M]], dur: dur });
+          sum += dur;
+        }
+        var acc = 0, DRAW_MS = 4200, PAUSE_MS = 110;
+        for (i = 0; i < segs.length; i++) {
+          segs[i].dur = segs[i].dur / sum * DRAW_MS;
+          segs[i].start = acc;
+          acc += segs[i].dur + PAUSE_MS;
+        }
+        drawTotal = acc;
+        phase = "draw"; pt = 0;
+        if (reduced) { phase = "hold"; vrpDraw(0); }
+      }
+
+      /* fresh instance with the visitor's click position as the anchor */
+      function startUser(p) {
+        mode = "user";
+        userPath = [0];
+        newProblem(p);
+        wps.unshift({ x: p.x, y: p.y });
+        anchored = true;
+        computeOptimal();
+      }
+
+      function drawNodes(order, alpha) {
+        for (var i = 0; i < order.length; i++) {
+          var n = wps[order[i]];
+          var na;
+          if (mode === "auto" && phase === "draw") {
+            var showAt = i === 0 ? 0 : segs[i - 1].start;
+            na = Math.max(0, Math.min(1, (pt - showAt) / 220)) * alpha;
+          } else {
+            na = alpha;
+          }
+          if (na <= 0) continue;
+          if (order[i] === 0) {
+            vctx.fillStyle = "rgba(107,147,255," + na.toFixed(3) + ")";
+            vctx.beginPath(); vctx.arc(n.x, n.y, 4.4, 0, 6.2832); vctx.fill();
+          } else {
+            vctx.fillStyle = "rgba(242,243,245," + (0.85 * na).toFixed(3) + ")";
+            vctx.beginPath(); vctx.arc(n.x, n.y, 2.6, 0, 6.2832); vctx.fill();
+          }
+        }
+      }
+
+      function drawAuto() {
+        var i;
+        var alpha = 1;
+        if (phase === "fade") alpha = Math.max(0, 1 - pt / FADE_MS);
+        vctx.save();
+        vctx.globalAlpha = alpha;
+        vctx.strokeStyle = "rgba(107,147,255,0.85)";
+        vctx.lineWidth = 1.4;
+        vctx.beginPath();
+        for (i = 0; i < segs.length; i++) {
+          var s = segs[i];
+          if (phase === "hold" || phase === "fade") {
+            vctx.moveTo(s.a.x, s.a.y); vctx.lineTo(s.b.x, s.b.y);
+          } else {
+            var local = (pt - s.start) / s.dur;
+            if (local <= 0) break;
+            if (local >= 1) {
+              vctx.moveTo(s.a.x, s.a.y); vctx.lineTo(s.b.x, s.b.y);
+            } else {
+              var e = 1 - Math.pow(1 - local, 2);
+              vctx.moveTo(s.a.x, s.a.y);
+              vctx.lineTo(s.a.x + (s.b.x - s.a.x) * e, s.a.y + (s.b.y - s.a.y) * e);
+              break;
+            }
+          }
+        }
+        vctx.stroke();
+        vctx.restore();
+        drawNodes(optOrder, alpha);
+      }
+
+      function closingReady() {
+        return anchored && userPath.length === wps.length;
+      }
+
+      function drawAnchorRing() {
+        if (!anchored) return;
+        vctx.lineWidth = 1;
+        vctx.strokeStyle = "rgba(107,147,255,0.4)";
+        vctx.beginPath(); vctx.arc(wps[0].x, wps[0].y, 8, 0, 6.2832); vctx.stroke();
+      }
+
+      function drawUser() {
+        drawNodes(optOrder, 1);
+        drawAnchorRing();
+        if (!userPath.length) return;
+        var i, n;
+        vctx.strokeStyle = "rgba(242,243,245,0.9)";
+        vctx.lineWidth = 1.4;
+        vctx.beginPath();
+        for (i = 0; i < userPath.length; i++) {
+          n = wps[userPath[i]];
+          if (i === 0) vctx.moveTo(n.x, n.y); else vctx.lineTo(n.x, n.y);
+        }
+        var last = wps[userPath[userPath.length - 1]];
+        if (mode === "user" && pointerPos) vctx.lineTo(pointerPos.x, pointerPos.y);
+        vctx.stroke();
+        if (mode === "user" && closingReady()) {
+          /* hint: click the anchor again to close the loop */
+          vctx.setLineDash([4, 4]);
+          vctx.strokeStyle = "rgba(242,243,245,0.35)";
+          vctx.beginPath();
+          vctx.moveTo(last.x, last.y); vctx.lineTo(wps[0].x, wps[0].y);
+          vctx.stroke();
+          vctx.setLineDash([]);
+        }
+      }
+
+      function drawResult() {
+        /* fade the whole result out before the next instance */
+        var outT = resT - (RES_FADE + RES_DRAW + RES_HOLD);
+        var outAlpha = outT > 0 ? Math.max(0, 1 - outT / RES_OUT) : 1;
+        vctx.save();
+        vctx.globalAlpha = outAlpha;
+        drawNodes(optOrder, 1);
+        drawAnchorRing();
+        var i, n;
+        if (userOptimal) {
+          /* visitor found the optimum: their own tour turns accent */
+          vctx.strokeStyle = "rgba(107,147,255,0.95)";
+          vctx.lineWidth = 1.6;
+          vctx.beginPath();
+          for (i = 0; i < userPath.length; i++) {
+            n = wps[userPath[i]];
+            if (i === 0) vctx.moveTo(n.x, n.y); else vctx.lineTo(n.x, n.y);
+          }
+          vctx.stroke();
+          vctx.restore();
+          return;
+        }
+        /* correction: keep the already-optimal edges, repair only the wrong ones */
+        vctx.lineWidth = 1.4;
+        if (correctEdges.length) {
+          vctx.strokeStyle = "rgba(107,147,255,0.95)";
+          vctx.beginPath();
+          for (i = 0; i < correctEdges.length; i++) {
+            vctx.moveTo(wps[correctEdges[i].a].x, wps[correctEdges[i].a].y);
+            vctx.lineTo(wps[correctEdges[i].b].x, wps[correctEdges[i].b].y);
+          }
+          vctx.stroke();
+        }
+        /* wrong edges fade out */
+        var fade = Math.max(0, 1 - resT / RES_FADE);
+        if (fade > 0 && wrongEdges.length) {
+          vctx.save();
+          vctx.globalAlpha = fade;
+          vctx.strokeStyle = "rgba(242,243,245,0.75)";
+          vctx.beginPath();
+          for (i = 0; i < wrongEdges.length; i++) {
+            vctx.moveTo(wps[wrongEdges[i].a].x, wps[wrongEdges[i].a].y);
+            vctx.lineTo(wps[wrongEdges[i].b].x, wps[wrongEdges[i].b].y);
+          }
+          vctx.stroke();
+          vctx.restore();
+        }
+        /* missing optimal edges draw themselves in, one after another */
+        vctx.strokeStyle = "rgba(107,147,255,0.9)";
+        vctx.beginPath();
+        for (i = 0; i < missingEdges.length; i++) {
+          var f = reduced ? 1 : Math.max(0, Math.min(1, (resT - RES_FADE * 0.5 - i * 260) / 420));
+          if (f <= 0) continue;
+          f = 1 - Math.pow(1 - f, 2);
+          var na2 = wps[missingEdges[i].a], nb = wps[missingEdges[i].b];
+          vctx.moveTo(na2.x, na2.y);
+          vctx.lineTo(na2.x + (nb.x - na2.x) * f, na2.y + (nb.y - na2.y) * f);
+        }
+        vctx.stroke();
+        vctx.restore();
+      }
+
+      function vrpDraw(dt) {
+        if (!reduced) {
+          if (mode === "auto") {
+            pt += dt;
+            if (phase === "draw" && pt >= drawTotal) { phase = "hold"; pt = 0; }
+            else if (phase === "hold" && pt >= HOLD_MS) { phase = "fade"; pt = 0; }
+            else if (phase === "fade" && pt >= FADE_MS) newProblem();
+          } else if (mode === "closed") {
+            /* loop just closed: let the visitor look at it briefly, then verdict */
+            closeT += dt;
+            if (closeT >= 700) evaluateUser();
+          } else if (mode === "result") {
+            resT += dt;
+            if (resT >= RES_FADE + RES_DRAW + RES_HOLD + RES_OUT) {
+              mode = "auto";
+              newProblem();
+            }
+          }
+        }
+        vctx.clearRect(0, 0, VS, VS);
+        if (mode === "user" || mode === "closed") drawUser();
+        else if (mode === "result") drawResult();
+        else drawAuto();
+      }
+
+      newProblem();
+
+      var badge = document.getElementById("badge");
+
+      function canvasPos(e) {
+        var r = vrpEl.getBoundingClientRect();
+        return { x: (e.clientX - r.left) * (VS / r.width), y: (e.clientY - r.top) * (VS / r.height) };
+      }
+
+      function evaluateUser() {
+        var ulen = 0, i;
+        for (i = 0; i < userPath.length - 1; i++) ulen += distM[userPath[i]][userPath[i + 1]];
+        userOptimal = ulen <= optLen * 1.02;
+
+        /* split the visitor's edges into already-optimal vs wrong */
+        var M = wps.length;
+        var optSet = {}, userSet = {};
+        for (i = 0; i < M; i++) {
+          var a = optOrder[i], b = optOrder[(i + 1) % M];
+          optSet[Math.min(a, b) * 100 + Math.max(a, b)] = true;
+        }
+        correctEdges = []; wrongEdges = []; missingEdges = [];
+        for (i = 0; i < userPath.length - 1; i++) {
+          var u = userPath[i], v = userPath[i + 1];
+          var key = Math.min(u, v) * 100 + Math.max(u, v);
+          userSet[key] = true;
+          if (optSet[key]) correctEdges.push({ a: u, b: v });
+          else wrongEdges.push({ a: u, b: v });
+        }
+        for (i = 0; i < M; i++) {
+          var a2 = optOrder[i], b2 = optOrder[(i + 1) % M];
+          if (!userSet[Math.min(a2, b2) * 100 + Math.max(a2, b2)]) missingEdges.push({ a: a2, b: b2 });
+        }
+
+        resT = reduced ? RES_FADE + RES_DRAW : 0;
+        mode = "result";
+      }
+
+      /* nearest unvisited node wins */
+      function trySnap(p) {
+        var best = -1, bd = Infinity;
+        for (var i = 1; i < wps.length; i++) {
+          if (userPath.indexOf(i) !== -1) continue;
+          var d = Math.hypot(wps[i].x - p.x, wps[i].y - p.y);
+          if (d < bd) { bd = d; best = i; }
+        }
+        if (best !== -1) userPath.push(best);
+      }
+
+      /* any left click outside an active drawing: fresh instance anchored at the click */
+      var insideBadge = true;
+      var switchTimer = null;
+
+      badge.addEventListener("pointerdown", function (e) {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        var p = canvasPos(e);
+        pointerPos = p;
+        if (mode === "user") {
+          if (closingReady()) {
+            /* only the anchor stays selectable — click it to close the loop */
+            if (Math.hypot(wps[0].x - p.x, wps[0].y - p.y) <= 24) {
+              userPath.push(0);
+              mode = "closed";
+              closeT = 0;
+              if (reduced) evaluateUser();
+            }
+          } else {
+            trySnap(p);
+          }
+        } else if (!reduced) {
+          /* quick fade so the fresh instance doesn't hard-cut */
+          if (switchTimer) return;
+          vrpEl.style.opacity = "0";
+          switchTimer = setTimeout(function () {
+            switchTimer = null;
+            if (insideBadge) startUser(p);
+            vrpEl.style.opacity = "1";
+          }, 180);
+          return;
+        } else {
+          startUser(p);
+        }
+        if (reduced) vrpDraw(0);
+      });
+
+      /* route follows the cursor, no button held */
+      badge.addEventListener("pointermove", function (e) {
+        if (mode !== "user") return;
+        pointerPos = canvasPos(e);
+        if (reduced) vrpDraw(0);
+      }, { passive: true });
+
+      badge.addEventListener("pointerenter", function () {
+        insideBadge = true;
+      });
+
+      badge.addEventListener("pointerleave", function () {
+        insideBadge = false;
+        /* only an unfinished drawing is cancelled; verdict/closed sequences always play out fully */
+        if (mode === "user") {
+          mode = "auto";
+          newProblem();
+        }
+      });
+
+      badge.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          mode = "auto";
+          newProblem();
+        }
+      });
+
+      /* keep the area behind the badge free of background nodes */
+      var bz = { x: -9999, y: -9999, r: 0 };
+      function updateBadgeZone() {
+        var r = badge.getBoundingClientRect();
+        bz.x = r.left + r.width / 2;
+        bz.y = r.top + r.height / 2;
+        bz.r = r.width / 2 + 24;
+      }
+      updateBadgeZone();
+      window.addEventListener("resize", updateBadgeZone);
+      window.addEventListener("load", updateBadgeZone);
+      window.addEventListener("scroll", updateBadgeZone, { passive: true });
+
+      function inBadge(x, y) {
+        var dx = x - bz.x, dy = y - bz.y;
+        return dx * dx + dy * dy < bz.r * bz.r;
+      }
+
+      function segInBadge(x1, y1, x2, y2) {
+        var dx = x2 - x1, dy = y2 - y1;
+        var len2 = dx * dx + dy * dy;
+        var t = len2 > 0 ? Math.max(0, Math.min(1, ((bz.x - x1) * dx + (bz.y - y1) * dy) / len2)) : 0;
+        var px = x1 + t * dx - bz.x, py = y1 + t * dy - bz.y;
+        return px * px + py * py < bz.r * bz.r;
+      }
+
+      /* ring rotation is driven in the main loop */
+      var badgeSvg = document.querySelector(".badge svg");
+      var badgeAng = 0;
+
+      /* ————— custom cursor: dot + trailing side tag (never covers content) ————— */
+      var cursorOn = finePointer && !reduced;
+      var dotEl = null, tagEl = null, tagIn = null;
+      var dxc = -100, dyc = -100, tagX = -200, tagY = -200, tagW = 0, tagH = 0;
+      if (cursorOn) {
+        document.body.classList.add("has-cursor");
+        dotEl = document.getElementById("cursor-dot");
+        tagEl = document.getElementById("cursor-tag");
+        tagIn = tagEl.querySelector(".tag-in");
+        var cursorVisible = false;
+        window.addEventListener("pointermove", function () {
+          if (!cursorVisible) {
+            cursorVisible = true;
+            dotEl.style.opacity = "1";
+          }
+        }, { passive: true });
+        window.addEventListener("pointerover", function (e) {
+          var t = e.target && e.target.closest ? e.target.closest("[data-cursor-text]") : null;
+          if (t) {
+            tagIn.textContent = t.getAttribute("data-cursor-text");
+            tagW = tagEl.offsetWidth;
+            tagH = tagEl.offsetHeight;
+            tagEl.classList.add("show");
+          } else {
+            tagEl.classList.remove("show");
+          }
+        }, { passive: true });
+        document.documentElement.addEventListener("pointerleave", function () {
+          cursorVisible = false;
+          dotEl.style.opacity = "0";
+        });
+      }
+
+      /* ————— main loop ————— */
+      if (reduced) {
+        netDraw();
+        vrpDraw(0);
+        window.addEventListener("scroll", netDraw, { passive: true });
+      } else {
+        var last = performance.now();
+        (function tick(now) {
+          var dt = Math.min(50, now - last);
+          last = now;
+          gx += (gtx - gx) * 0.06;
+          gy += (gty - gy) * 0.06;
+          glow.style.setProperty("--gx", gx.toFixed(2));
+          glow.style.setProperty("--gy", gy.toFixed(2));
+          if (cursorOn) {
+            dxc += (mouseX - dxc) * 0.45;
+            dyc += (mouseY - dyc) * 0.45;
+            dotEl.style.transform = "translate3d(" + (dxc - 3.5) + "px," + (dyc - 3.5) + "px,0)";
+            var px = mouseX + 18, py = mouseY + 20;
+            if (px + tagW > window.innerWidth - 8) px = mouseX - tagW - 18;
+            if (py + tagH > window.innerHeight - 8) py = mouseY - tagH - 16;
+            tagX += (px - tagX) * 0.16;
+            tagY += (py - tagY) * 0.16;
+            tagEl.style.transform = "translate3d(" + tagX.toFixed(1) + "px," + tagY.toFixed(1) + "px,0)";
+          }
+          badgeAng = (badgeAng + dt * 0.018) % 360;
+          badgeSvg.style.transform = "rotate(" + badgeAng.toFixed(2) + "deg)";
+          netDraw();
+          vrpDraw(dt);
+          requestAnimationFrame(tick);
+        })(last);
+      }
+    })();
+  </script>
+</body>
+</html>
